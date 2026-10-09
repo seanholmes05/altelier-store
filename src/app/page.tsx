@@ -76,7 +76,7 @@ export default async function Home() {
       <Section flush className="pt-section">
         <Container className="flex items-end justify-between pb-6">
           <h2 className="type-heading">New Arrivals</h2>
-          <Link href="#" className="type-label link">
+          <Link href="/new-arrivals" className="type-label link">
             View all
           </Link>
         </Container>

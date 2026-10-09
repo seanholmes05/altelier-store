@@ -65,7 +65,7 @@ export const categoryCollections: Collection[] = [
 ];
 
 export const navLinks = [
-  { label: "New", href: "#" },
+  { label: "New", href: "/new-arrivals" },
   { label: "Women", href: "#" },
   { label: "Men", href: "#" },
   { label: "Accessories", href: "#" },
