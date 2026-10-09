@@ -9,6 +9,7 @@ const columns = {
   name: products.name,
   priceCents: products.priceCents,
   category: categories.name,
+  categorySlug: categories.slug,
   categoryId: products.categoryId,
   stock: products.stock,
   description: products.description,
@@ -22,6 +23,7 @@ type Row = {
   name: string;
   priceCents: number;
   category: string;
+  categorySlug: string;
   categoryId: number;
   stock: number;
   description: string;
@@ -30,8 +32,8 @@ type Row = {
   imageAlt: string;
 };
 
-/** Product plus the internal category id, which related-product lookups need. */
-export type CatalogProduct = Product & { categoryId: number };
+/** Product plus the internal category id (related-product lookups) and public category slug (links). */
+export type CatalogProduct = Product & { categoryId: number; categorySlug: string };
 
 const toProduct = ({ imageUrl, imageAlt, ...rest }: Row): CatalogProduct => ({
   ...rest,
@@ -100,6 +102,47 @@ export async function getRelatedProducts(
   const rows = await listing()
     .where(ne(products.slug, productId))
     .orderBy(sql`(${products.categoryId} = ${categoryId}) desc`, desc(products.createdAt))
+    .limit(limit);
+  return rows.map(toProduct);
+}
+
+export type CategorySummary = { slug: string; name: string };
+
+/** The category with this slug, or `undefined`. */
+export async function getCategoryBySlug(slug: string): Promise<CategorySummary | undefined> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("products");
+
+  const [row] = await db
+    .select({ slug: categories.slug, name: categories.name })
+    .from(categories)
+    .where(eq(categories.slug, slug))
+    .limit(1);
+  return row;
+}
+
+export async function getCategorySlugs(): Promise<string[]> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("products");
+
+  const rows = await db.select({ slug: categories.slug }).from(categories);
+  return rows.map((r) => r.slug);
+}
+
+/** Products in a category, newest first. */
+export async function getProductsByCategory(
+  categorySlug: string,
+  limit = 48,
+): Promise<CatalogProduct[]> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("products");
+
+  const rows = await listing()
+    .where(eq(categories.slug, categorySlug))
+    .orderBy(desc(products.createdAt), asc(products.id))
     .limit(limit);
   return rows.map(toProduct);
 }

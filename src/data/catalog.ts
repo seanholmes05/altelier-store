@@ -56,7 +56,7 @@ export const categoryCollections: Collection[] = [
   {
     slug: "outerwear",
     title: "Outerwear",
-    href: "#",
+    href: "/collections/outerwear",
     image: {
       src: unsplash("1551028719-00167b16eac5"),
       alt: "Black leather biker jacket on a hanger against white linen",
@@ -69,7 +69,7 @@ export const navLinks = [
   { label: "Women", href: "#" },
   { label: "Men", href: "#" },
   { label: "Accessories", href: "#" },
-  { label: "Outerwear", href: "#" },
+  { label: "Outerwear", href: "/collections/outerwear" },
 ] as const;
 
 export const services = [
