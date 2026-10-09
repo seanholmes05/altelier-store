@@ -1,4 +1,4 @@
-import { getStock, type Product } from "@/data/catalog";
+import { getStock, type Product } from "@/lib/product";
 import { cn } from "@/lib/cn";
 
 const dot = {

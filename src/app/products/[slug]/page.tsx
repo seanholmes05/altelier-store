@@ -7,10 +7,11 @@ import { AddToBag } from "@/components/product/add-to-bag";
 import { ProductCard } from "@/components/product/product-card";
 import { StockStatus } from "@/components/product/stock-status";
 import { Container, MediaFrame, ProductGrid, Section } from "@/components/ui";
-import { getProduct, getStock, newArrivals } from "@/data/catalog";
+import { getProductBySlug, getProductSlugs, getRelatedProducts } from "@/db/queries/products";
+import { formatPrice, getStock } from "@/lib/product";
 
-export function generateStaticParams() {
-  return newArrivals.map((p) => ({ slug: p.id }));
+export async function generateStaticParams() {
+  return (await getProductSlugs()).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -18,7 +19,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const product = getProduct((await params).slug);
+  const product = await getProductBySlug((await params).slug);
   if (!product) return {};
   return { title: `${product.name} | Altelier`, description: product.description };
 }
@@ -50,14 +51,11 @@ export default function ProductPage({ params }: { params: Params }) {
 }
 
 async function ProductView({ params }: { params: Params }) {
-  const product = getProduct((await params).slug);
+  const product = await getProductBySlug((await params).slug);
   if (!product) notFound();
 
   const soldOut = getStock(product).state === "out-of-stock";
-  const related = [
-    ...newArrivals.filter((p) => p.id !== product.id && p.category === product.category),
-    ...newArrivals.filter((p) => p.id !== product.id && p.category !== product.category),
-  ].slice(0, 4);
+  const related = await getRelatedProducts(product.id, product.categoryId);
 
   return (
     <main id="main">
@@ -108,7 +106,7 @@ async function ProductView({ params }: { params: Params }) {
           <div className="md:sticky md:top-24">
             <p className="type-label text-muted">{product.category}</p>
             <h1 className="type-statement mt-2">{product.name}</h1>
-            <p className="type-title mt-4">{product.price}</p>
+            <p className="type-title mt-4">{formatPrice(product.priceCents)}</p>
             <div className="mt-3">
               <StockStatus product={product} />
             </div>
