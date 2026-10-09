@@ -6,10 +6,10 @@ import {
   categoryCollections,
   featuredCollections,
   images,
-  newArrivals,
   services,
   type Collection,
 } from "@/data/catalog";
+import { getNewArrivals } from "@/db/queries/products";
 
 /** Large editorial tile with the title over a soft scrim at the bottom. */
 function CollectionTile({
@@ -45,7 +45,9 @@ function CollectionTile({
   );
 }
 
-export default function Home() {
+export default async function Home() {
+  const newArrivals = await getNewArrivals();
+
   return (
     <main id="main">
       {/* Hero */}

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MediaFrame } from "@/components/ui";
-import { getStock, productHref, type Product } from "@/data/catalog";
+import { formatPrice, getStock, productHref, type Product } from "@/lib/product";
 
 /** Listing tile: 3:4 image, name, price. Shared by the homepage and related-product grids. */
 export function ProductCard({ product, priority }: { product: Product; priority?: boolean }) {
@@ -25,7 +25,7 @@ export function ProductCard({ product, priority }: { product: Product; priority?
         <div className="px-4 pb-6 pt-3">
           <p className="type-title">{product.name}</p>
           <p className="type-caption text-muted">
-            {soldOut ? "Out of stock" : product.price}
+            {soldOut ? "Out of stock" : formatPrice(product.priceCents)}
           </p>
         </div>
       </Link>
