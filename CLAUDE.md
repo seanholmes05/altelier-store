@@ -35,3 +35,13 @@ Next.js 16 App Router under `src/`, path alias `@/*` → `src/*`. This is a bare
 
 - `next.config.ts` enables `cacheComponents` and `partialPrefetching`, which change how caching and dynamic data access work compared with older Next.js. Check `node_modules/next/dist/docs/` before writing data-fetching or caching code, as AGENTS.md instructs.
 - Tailwind v4 is wired through a Turbopack rule using `@tailwindcss/turbopack` in `next.config.ts` (there is no `postcss.config`). Theme tokens live in `src/app/globals.css` via `@theme inline`.
+
+## Design system
+
+Monochrome luxury-retail look defined in `src/app/globals.css`; reusable primitives are in `src/components/ui` (import from `@/components/ui`).
+
+- Use tokens, not raw values: colours (`paper`, `ink`, `muted`, `wash`, `line`, `inverse`), `px-gutter` / `py-section` (responsive, 16px→64px and 40px→56px), `max-w-page`, `h-control` (48px) / `h-control-sm` (36px).
+- Use the `type-*` roles (`type-label`, `type-heading`, `type-body`, `type-title`, `type-caption`, `type-statement`) rather than ad-hoc size/weight combinations. Uppercase bold is reserved for labels, buttons and section headings.
+- Corners are square (`--radius-*` is cleared, so `rounded-*` utilities don't exist). Borders are 1px `border-line` or `border-ink`. There is no dark mode.
+- Product imagery is 3:4 (`MediaFrame`), in a flush grid of 2 columns on mobile, 3 from `md`, 4 from `lg` (`ProductGrid`).
+- Links are underlined text (`TextLink`, `link`, `link-quiet`), not coloured. Sections that sit on `bg-ink` need the `on-ink` class (`<Section tone="ink">` adds it) so focus outlines stay visible.

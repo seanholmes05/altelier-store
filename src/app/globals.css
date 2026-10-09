@@ -1,26 +1,180 @@
 @import "tailwindcss";
 
+/*
+ * Design system: monochrome luxury retail.
+ * Pure black on white, square corners, hairline borders, one sans family,
+ * small uppercase bold labels, flush 3:4 product imagery, generous gutters.
+ */
+
+/* Responsive tokens: these change with the viewport, so they live on :root. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --gutter: 1rem; /* page side padding */
+  --section-y: 2.5rem; /* vertical rhythm between page sections */
+  --tracking-ui: 0.01em; /* label/nav tracking (loose on mobile, tight on desktop) */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (min-width: 48rem) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --gutter: 4rem;
+    --section-y: 3.5rem;
+    --tracking-ui: -0.03em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Static tokens */
+@theme {
+  /* Colour */
+  --color-paper: #ffffff;
+  --color-ink: #000000;
+  --color-muted: #6b6b6b; /* secondary text, prices, captions */
+  --color-wash: #f4f4f4; /* product-tile / image placeholder ground */
+  --color-line: #d9d9d9; /* hairline borders and dividers */
+  --color-inverse: #ffffff; /* text on ink / imagery */
+  --color-danger: #b00020;
+
+  /* Square system: no rounded corners anywhere. */
+  --radius-*: initial;
+  --radius-none: 0px;
+
+  /* Layout */
+  --container-page: 120rem; /* 1920px cap so ultra-wides don't stretch */
+  --container-prose: 42rem;
+
+  /* Control heights */
+  --spacing-control: 3rem; /* 48px default button / input */
+  --spacing-control-sm: 2.25rem; /* 36px compact */
+}
+
+/* Tokens that reference other variables */
+@theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --spacing-gutter: var(--gutter);
+  --spacing-section: var(--section-y);
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.5rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* One focus treatment everywhere: a crisp 1px ink outline. */
+  :focus-visible {
+    outline: 1px solid var(--color-ink);
+    outline-offset: 3px;
+  }
+
+  .on-ink :focus-visible {
+    outline-color: var(--color-inverse);
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-inverse);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Typography roles: use these instead of ad-hoc size/weight combinations. */
+
+/* Nav items, buttons, tags, eyebrows: 12px bold caps */
+@utility type-label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-ui);
+}
+
+/* Section headings: 14px on mobile, 16px on desktop, bold caps */
+@utility type-heading {
+  font-size: 0.875rem;
+  line-height: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-ui);
+
+  @media (min-width: 48rem) {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+/* Body copy */
+@utility type-body {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+}
+
+/* Product names, card titles: 16px medium, sentence case */
+@utility type-title {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+/* Small print, captions, legal, prices */
+@utility type-caption {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+/* Editorial statement: large and light */
+@utility type-statement {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+
+  @media (min-width: 48rem) {
+    font-size: 2rem;
+    line-height: 3rem;
+  }
+}
+
+/* Text link: plain text, underlined, no colour change. */
+@utility link {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 150ms ease;
+
+  &:hover {
+    text-decoration-color: transparent;
+  }
+}
+
+/* Lower-key link: underline appears on hover only (nav, footer). */
+@utility link-quiet {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 150ms ease;
+
+  &:hover {
+    text-decoration-color: currentColor;
+  }
 }
