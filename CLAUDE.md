@@ -22,7 +22,7 @@ There is no test runner configured yet.
 
 ## Setup
 
-Copy `.env.example` to `.env.local` and set `DATABASE_URL` (Neon pooled connection string), `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` and `NEXT_PUBLIC_APP_URL`. `src/db/index.ts` throws at import time if `DATABASE_URL` is missing, so anything importing `@/db` (including `@/lib/auth` and the auth route) needs it set.
+There is no tracked `.env.example`. Create `.env.local` (git-ignored, never commit it) in the project root and set `DATABASE_URL` (Neon pooled connection string), `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` and `NEXT_PUBLIC_APP_URL`. `src/db/index.ts` throws at import time if `DATABASE_URL` is missing, so anything importing `@/db` (including `@/lib/auth` and the auth route) needs it set.
 
 ## Architecture
 
