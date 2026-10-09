@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  images: {
+    // Sample imagery for the storefront placeholder content.
+    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
+  },
   turbopack: {
     rules: {
       "*.css": {
