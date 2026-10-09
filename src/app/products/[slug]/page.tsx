@@ -68,7 +68,11 @@ async function ProductView({ params }: { params: Params }) {
               </Link>
             </li>
             <li aria-hidden>/</li>
-            <li>{product.category}</li>
+            <li>
+              <Link href={`/collections/${product.categorySlug}`} className="link-quiet">
+                {product.category}
+              </Link>
+            </li>
             <li aria-hidden>/</li>
             <li aria-current="page" className="text-ink">
               {product.name}
