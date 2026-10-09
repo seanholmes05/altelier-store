@@ -13,7 +13,8 @@ export type Product = {
   stock: number;
   description: string;
   details: string[];
-  image: Img;
+  /** Ordered gallery; `images[0]` is the primary image. Listings carry only the primary. */
+  images: [Img, ...Img[]];
 };
 
 export const productHref = (p: Pick<Product, "id">) => `/products/${p.id}`;

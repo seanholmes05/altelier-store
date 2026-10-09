@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   images: {
     // Sample imagery for the storefront placeholder content.
     remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
+    // Product imagery is requested at 90 to keep fabric and stitching detail; 75 is the default.
+    qualities: [75, 90],
   },
   turbopack: {
     rules: {

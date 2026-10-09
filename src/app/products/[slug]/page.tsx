@@ -78,27 +78,21 @@ async function ProductView({ params }: { params: Params }) {
       </Container>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-        {/* Imagery: full-size view, then a closer detail crop */}
+        {/* Gallery: every image at its natural resolution, in order */}
         <div>
-          <MediaFrame ratio="portrait" className="md:aspect-[4/5]">
-            <Image
-              src={product.image.src}
-              alt={product.image.alt}
-              fill
-              priority
-              sizes="(min-width: 768px) 60vw, 100vw"
-              className={`object-cover ${soldOut ? "opacity-60" : ""}`}
-            />
-          </MediaFrame>
-          <MediaFrame ratio="portrait" className="hidden md:block md:aspect-[4/5]">
-            <Image
-              src={product.image.src}
-              alt={`Detail of the ${product.name}`}
-              fill
-              sizes="(min-width: 768px) 60vw, 100vw"
-              className={`origin-[50%_35%] scale-[1.8] object-cover ${soldOut ? "opacity-60" : ""}`}
-            />
-          </MediaFrame>
+          {product.images.map((image, i) => (
+            <MediaFrame key={image.src} ratio="portrait" className="md:aspect-[4/5]">
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                priority={i === 0}
+                quality={90}
+                sizes="(min-width: 1024px) 60vw, (min-width: 768px) 50vw, 100vw"
+                className={`object-cover ${soldOut ? "opacity-60" : ""}`}
+              />
+            </MediaFrame>
+          ))}
         </div>
 
         {/* Information */}

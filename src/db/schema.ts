@@ -8,6 +8,7 @@ import {
   pgTable,
   text,
   timestamp,
+  unique,
 } from "drizzle-orm/pg-core";
 
 export const categories = pgTable("categories", {
@@ -30,8 +31,6 @@ export const products = pgTable(
     priceCents: integer("price_cents").notNull(),
     /** Units on hand. 0 means out of stock. */
     stock: integer().notNull().default(0),
-    imageUrl: text("image_url").notNull(),
-    imageAlt: text("image_alt").notNull(),
     categoryId: integer("category_id")
       .notNull()
       .references(() => categories.id, { onDelete: "restrict" }),
@@ -45,13 +44,40 @@ export const products = pgTable(
   ],
 );
 
+/** Ordered gallery. `position` 0 is the primary image shown on listing cards. */
+export const productImages = pgTable(
+  "product_images",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    productId: integer("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    url: text().notNull(),
+    alt: text().notNull(),
+    position: integer().notNull().default(0),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("product_images_product_id_position_unique").on(t.productId, t.position),
+    check("product_images_position_non_negative", sql`${t.position} >= 0`),
+  ],
+);
+
 export const categoriesRelations = relations(categories, ({ many }) => ({
   products: many(products),
 }));
 
-export const productsRelations = relations(products, ({ one }) => ({
+export const productsRelations = relations(products, ({ one, many }) => ({
   category: one(categories, {
     fields: [products.categoryId],
     references: [categories.id],
+  }),
+  images: many(productImages),
+}));
+
+export const productImagesRelations = relations(productImages, ({ one }) => ({
+  product: one(products, {
+    fields: [productImages.productId],
+    references: [products.id],
   }),
 }));
