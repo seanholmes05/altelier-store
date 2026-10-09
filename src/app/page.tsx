@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ProductCard } from "@/components/product/product-card";
 import { Button, Container, MediaFrame, ProductGrid, Section } from "@/components/ui";
 import {
   categoryCollections,
@@ -79,24 +80,7 @@ export default function Home() {
         </Container>
         <ProductGrid>
           {newArrivals.map((p, i) => (
-            <li key={p.id}>
-              <Link href={p.href} className="group block">
-                <MediaFrame ratio="portrait">
-                  <Image
-                    src={p.image.src}
-                    alt={p.image.alt}
-                    fill
-                    sizes="(min-width: 1024px) 25vw, 50vw"
-                    priority={i < 2}
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                  />
-                </MediaFrame>
-                <div className="px-4 pb-6 pt-3">
-                  <p className="type-title">{p.name}</p>
-                  <p className="type-caption text-muted">{p.price}</p>
-                </div>
-              </Link>
-            </li>
+            <ProductCard key={p.id} product={p} priority={i < 2} />
           ))}
         </ProductGrid>
       </Section>
