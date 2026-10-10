@@ -112,7 +112,7 @@ async function ProductView({ params }: { params: Params }) {
             <p className="type-body mt-8">{product.description}</p>
 
             <div className="mt-8">
-              <AddToBag soldOut={soldOut} />
+              <AddToBag slug={product.id} soldOut={soldOut} />
             </div>
 
             <div className="mt-10 border-t border-line">
