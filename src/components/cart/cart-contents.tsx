@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CheckoutButton } from "@/components/cart/checkout-button";
 import { LineControls, RemoveButton } from "@/components/cart/line-controls";
 import { ProductCard } from "@/components/product/product-card";
 import { StockStatus } from "@/components/product/stock-status";
@@ -128,7 +127,11 @@ export async function CartContents() {
             </p>
           ) : null}
           <div className="mt-6 space-y-3">
-            {cart.lines.length > 0 ? <CheckoutButton /> : null}
+            {cart.lines.length > 0 ? (
+              <Button href="/checkout" className="w-full">
+                Checkout
+              </Button>
+            ) : null}
             <Button href="/new-arrivals" variant="secondary" className="w-full">
               Continue shopping
             </Button>

@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
-import { asc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { orderItems, orders, products } from "@/db/schema";
+import { orderItems, orders, productImages, products } from "@/db/schema";
 import type { OrderStatus } from "@/db/schema";
 
 // Everything here is uncached and server-only. Stock and order state must be read and written
@@ -255,8 +255,21 @@ export async function getOrderBySessionId(sessionId: string) {
     .limit(1);
   if (!order) return undefined;
   const items = await db
-    .select()
+    .select({
+      id: orderItems.id,
+      productSlug: orderItems.productSlug,
+      name: orderItems.name,
+      unitPriceCents: orderItems.unitPriceCents,
+      quantity: orderItems.quantity,
+      lineTotalCents: orderItems.lineTotalCents,
+      imageUrl: productImages.url,
+      imageAlt: productImages.alt,
+    })
     .from(orderItems)
+    .leftJoin(
+      productImages,
+      and(eq(productImages.productId, orderItems.productId), eq(productImages.position, 0)),
+    )
     .where(eq(orderItems.orderId, order.id))
     .orderBy(asc(orderItems.id));
   return { ...order, items };
