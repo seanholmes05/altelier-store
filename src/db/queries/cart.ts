@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { productImages, products } from "@/db/schema";
 
 export type LiveProduct = {
+  id: number;
   slug: string;
   name: string;
   /** Price in USD cents, straight from the database. */
@@ -24,6 +25,7 @@ export async function getLiveProducts(slugs: string[]): Promise<Map<string, Live
 
   const rows = await db
     .select({
+      id: products.id,
       slug: products.slug,
       name: products.name,
       priceCents: products.priceCents,
