@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { BagLink } from "@/components/cart/bag-link";
 import { navLinks } from "@/data/catalog";
 import { AccountLink } from "./account-link";
 import { MobileMenu } from "./mobile-menu";
@@ -46,9 +47,15 @@ export function SiteHeader() {
             </Suspense>
           </li>
           <li>
-            <Link href="#" className="type-label link-quiet">
-              Bag (0)
-            </Link>
+            <Suspense
+              fallback={
+                <Link href="/cart" className="type-label link-quiet">
+                  Bag
+                </Link>
+              }
+            >
+              <BagLink />
+            </Suspense>
           </li>
         </ul>
       </div>
