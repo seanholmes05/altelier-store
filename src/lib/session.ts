@@ -10,14 +10,22 @@ export type CurrentUser = {
   name: string;
   email: string;
   role: "customer" | "admin";
+  createdAt: Date;
 };
 
 type RawSession = Awaited<ReturnType<typeof auth.api.getSession>>;
 
 function toUser(session: RawSession): CurrentUser | null {
   if (!session) return null;
-  const { id, name, email, role } = session.user;
-  return { id, name, email, role: role === "admin" ? "admin" : "customer" };
+  const { id, name, email, role, createdAt } = session.user;
+  return {
+    id,
+    name,
+    email,
+    role: role === "admin" ? "admin" : "customer",
+    // A cookie-cached session serialises dates as strings.
+    createdAt: new Date(createdAt),
+  };
 }
 
 /**

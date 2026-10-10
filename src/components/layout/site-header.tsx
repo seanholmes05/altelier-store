@@ -23,11 +23,11 @@ export function SiteHeader() {
           </nav>
         </div>
 
-        <Link href="/" className="text-lg font-semibold uppercase tracking-[0.3em] md:text-xl">
+        <Link href="/" className="text-base font-semibold uppercase tracking-[0.2em] md:text-xl md:tracking-[0.3em]">
           Altelier
         </Link>
 
-        <ul className="flex items-center justify-end gap-4 md:gap-6">
+        <ul className="flex items-center justify-end gap-3 whitespace-nowrap md:gap-6">
           <li className="hidden md:block">
             <Link href="#" className="type-label link-quiet">
               Search
