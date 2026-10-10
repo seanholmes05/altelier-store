@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { AddToBag } from "@/components/product/add-to-bag";
+import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductCard } from "@/components/product/product-card";
 import { StockStatus } from "@/components/product/stock-status";
 import { Container, MediaFrame, ProductGrid, Section } from "@/components/ui";
@@ -82,22 +82,8 @@ async function ProductView({ params }: { params: Params }) {
       </Container>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-        {/* Gallery: every image at its natural resolution, in order */}
-        <div>
-          {product.images.map((image, i) => (
-            <MediaFrame key={image.src} ratio="portrait" className="md:aspect-[4/5]">
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                priority={i === 0}
-                quality={90}
-                sizes="(min-width: 1024px) 60vw, (min-width: 768px) 50vw, 100vw"
-                className={`object-cover ${soldOut ? "opacity-60" : ""}`}
-              />
-            </MediaFrame>
-          ))}
-        </div>
+        {/* Gallery: swipeable slides at full quality, with thumbnails */}
+        <ProductGallery images={product.images} name={product.name} soldOut={soldOut} />
 
         {/* Information */}
         <div className="px-gutter py-8 md:px-8 md:py-12 lg:px-12">

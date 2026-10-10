@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { ProductImage } from "@/components/product/product-image";
 import { MediaFrame } from "@/components/ui";
 import { formatPrice, getStock, productHref, type Product } from "@/lib/product";
 
@@ -12,7 +12,7 @@ export function ProductCard({ product, priority }: { product: Product; priority?
     <li>
       <Link href={productHref(product)} className="group block">
         <MediaFrame ratio="portrait">
-          <Image
+          <ProductImage
             src={image.src}
             alt={image.alt}
             fill
