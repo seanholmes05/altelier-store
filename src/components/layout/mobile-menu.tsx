@@ -5,12 +5,12 @@ import { useState } from "react";
 
 type Props = { links: ReadonlyArray<{ label: string; href: string }> };
 
-/** Mobile-only disclosure menu. Desktop shows the links inline in the header. */
+/** Disclosure menu below `lg`. From `lg` up the header shows the links inline (six need ~900px). */
 export function MobileMenu({ links }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="md:hidden">
+    <div className="lg:hidden">
       <button
         type="button"
         className="type-label inline-flex h-control-sm items-center"
