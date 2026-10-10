@@ -5,7 +5,17 @@ import { useState } from "react";
 import { Button } from "@/components/ui";
 import { authClient } from "@/lib/auth-client";
 
-export function SignOutButton() {
+/**
+ * `button` is the standalone control; `link` is a plain text button for use as a navigation
+ * item, styled by the caller through `className`.
+ */
+export function SignOutButton({
+  variant = "button",
+  className,
+}: {
+  variant?: "button" | "link";
+  className?: string;
+}) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
 
@@ -16,9 +26,18 @@ export function SignOutButton() {
     router.refresh();
   }
 
+  const label = pending ? "Signing out…" : "Sign out";
+
+  if (variant === "link") {
+    return (
+      <button type="button" onClick={onClick} disabled={pending} className={className}>
+        {label}
+      </button>
+    );
+  }
   return (
     <Button variant="secondary" onClick={onClick} disabled={pending}>
-      {pending ? "Signing out…" : "Sign out"}
+      {label}
     </Button>
   );
 }
