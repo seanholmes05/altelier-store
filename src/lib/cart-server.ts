@@ -26,7 +26,15 @@ export type CartLine = {
   href: string;
 };
 
-export type UnavailableLine = { slug: string; name: string };
+export type UnavailableLine = {
+  slug: string;
+  name: string;
+  /** `out-of-stock`: still listed, none left. `removed`: no longer in the catalogue. */
+  reason: "out-of-stock" | "removed";
+  /** Present when the product is still listed. */
+  image?: Img;
+  href?: string;
+};
 
 export type CartView = {
   lines: CartLine[];
@@ -57,7 +65,17 @@ export async function getCart(): Promise<CartView> {
     const product = live.get(slug);
     const maxQuantity = product ? maxQuantityFor(product.stock) : 0;
     if (!product || maxQuantity === 0) {
-      unavailable.push({ slug, name: product?.name ?? slug });
+      unavailable.push(
+        product
+          ? {
+              slug,
+              name: product.name,
+              reason: "out-of-stock",
+              image: { src: product.imageUrl, alt: product.imageAlt },
+              href: `/products/${slug}`,
+            }
+          : { slug, name: slug, reason: "removed" },
+      );
       continue;
     }
     const quantity = Math.min(requestedQuantity, maxQuantity);
