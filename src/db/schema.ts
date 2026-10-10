@@ -1,5 +1,5 @@
-// Table definitions go here. Generate Better Auth tables with:
-//   npx @better-auth/cli generate
+// Storefront tables live here. Better Auth tables are in `./auth-schema` and re-exported
+// below, because drizzle-kit and the Drizzle client both read only this file.
 import { relations, sql } from "drizzle-orm";
 import {
   check,
@@ -10,6 +10,8 @@ import {
   timestamp,
   unique,
 } from "drizzle-orm/pg-core";
+
+export * from "./auth-schema";
 
 export const categories = pgTable("categories", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),

@@ -15,6 +15,13 @@
       "when": 1791584323165,
       "tag": "0001_green_micromax",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791596372885,
+      "tag": "0002_goofy_the_executioner",
+      "breakpoints": true
     }
   ]
 }

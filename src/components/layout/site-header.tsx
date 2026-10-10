@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { navLinks } from "@/data/catalog";
+import { AccountLink } from "./account-link";
 import { MobileMenu } from "./mobile-menu";
 
 export function SiteHeader() {
@@ -30,6 +32,18 @@ export function SiteHeader() {
             <Link href="#" className="type-label link-quiet">
               Search
             </Link>
+          </li>
+          <li>
+            {/* Fallback links to /account, which sends anonymous visitors on to sign-in. */}
+            <Suspense
+              fallback={
+                <Link href="/account" className="type-label link-quiet">
+                  Account
+                </Link>
+              }
+            >
+              <AccountLink />
+            </Suspense>
           </li>
           <li>
             <Link href="#" className="type-label link-quiet">
