@@ -12,6 +12,8 @@ import type { CartEntry } from "@/lib/cart";
 import type { Img } from "@/lib/product";
 
 export type CartLine = {
+  /** Internal product id, for reserving stock at checkout. Not for the client. */
+  productId: number;
   slug: string;
   name: string;
   priceCents: number;
@@ -80,6 +82,7 @@ export async function getCart(): Promise<CartView> {
     }
     const quantity = Math.min(requestedQuantity, maxQuantity);
     lines.push({
+      productId: product.id,
       slug,
       name: product.name,
       priceCents: product.priceCents,
