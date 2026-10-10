@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { db } from "@/db";
 import { validateAuthSecret } from "@/lib/auth-secret";
+import { PASSWORD_MAX, PASSWORD_MIN } from "@/lib/auth-validation";
 
 // The build only collects route metadata and never signs anything, so it must not
 // need production secrets. Every runtime start validates (see `src/instrumentation.ts`).
@@ -17,8 +18,8 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
-    minPasswordLength: 10,
-    maxPasswordLength: 128,
+    minPasswordLength: PASSWORD_MIN,
+    maxPasswordLength: PASSWORD_MAX,
     // No mail transport yet; revisit before accounts hold orders or addresses.
     requireEmailVerification: false,
   },
