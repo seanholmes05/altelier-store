@@ -64,12 +64,15 @@ export const categoryCollections: Collection[] = [
   },
 ];
 
+// Every entry must be a real page. Collections are the database categories (see `seed.ts`);
+// `/collections/[slug]` 404s for an unknown slug, so keep these in step with the seed.
 export const navLinks = [
   { label: "New", href: "/new-arrivals" },
-  { label: "Women", href: "#" },
-  { label: "Men", href: "#" },
-  { label: "Accessories", href: "#" },
+  { label: "Knitwear", href: "/collections/knitwear" },
   { label: "Outerwear", href: "/collections/outerwear" },
+  { label: "Footwear", href: "/collections/footwear" },
+  { label: "Tailoring", href: "/collections/tailoring" },
+  { label: "Essentials", href: "/collections/essentials" },
 ] as const;
 
 export const services = [

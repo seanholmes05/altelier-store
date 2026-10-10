@@ -11,7 +11,7 @@ export function SiteHeader() {
       <div className="relative mx-auto grid h-14 w-full max-w-page grid-cols-[1fr_auto_1fr] items-center px-gutter md:h-16">
         <div className="flex items-center">
           <MobileMenu links={navLinks} />
-          <nav aria-label="Primary" className="hidden md:block">
+          <nav aria-label="Primary" className="hidden lg:block">
             <ul className="flex gap-6">
               {navLinks.map((l) => (
                 <li key={l.label}>
