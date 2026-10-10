@@ -1,61 +1,97 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import type { FormEvent } from "react";
 import { Button, TextLink } from "@/components/ui";
 import { authClient } from "@/lib/auth-client";
+import { validateCurrentPassword, validateEmail } from "@/lib/auth-validation";
 import { Field } from "./field";
+import { FormError } from "./form-error";
+import { useAuthForm } from "./use-auth-form";
+
+const validators = { email: validateEmail, password: validateCurrentPassword };
 
 export function SignInForm({ next }: { next: string }) {
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
+  const form = useAuthForm(validators);
+  const { errors, formError, pending } = form;
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    setError(null);
-    setPending(true);
+    const el = e.currentTarget;
+    form.setFormError(null);
+    if (!form.validateAll(el)) return;
 
-    const { error } = await authClient.signIn.email({
-      email: String(form.get("email") ?? ""),
-      password: String(form.get("password") ?? ""),
-    });
+    const data = new FormData(el);
+    form.setPending(true);
 
-    if (error) {
-      setPending(false);
-      // One message for unknown email and wrong password, so it can't be used to probe accounts.
-      setError(
-        error.status === 429
-          ? "Too many attempts. Please wait a moment and try again."
-          : "Email or password is incorrect.",
-      );
-      return;
+    let status: number | undefined;
+    try {
+      const { error } = await authClient.signIn.email({
+        email: String(data.get("email")).trim(),
+        password: String(data.get("password")),
+      });
+      if (!error) {
+        // Keep the form disabled while the router swaps pages.
+        router.push(next);
+        router.refresh();
+        return;
+      }
+      status = error.status;
+    } catch {
+      status = 0;
     }
-    router.push(next);
-    router.refresh();
+
+    form.setPending(false);
+    if (status === 429) {
+      form.setFormError("Too many attempts. Please wait a moment and try again.");
+    } else if (status === 0 || (status !== undefined && status >= 500)) {
+      form.setFormError("We couldn't sign you in right now. Check your connection and try again.");
+    } else {
+      // One message for unknown email and wrong password, so it can't be used to probe accounts.
+      form.setFormError("That email and password don't match. Check them and try again.");
+      const password = el.elements.namedItem("password") as HTMLInputElement;
+      password.value = "";
+      password.focus();
+    }
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-8 grid gap-6">
-      <Field label="Email" name="email" type="email" autoComplete="email" required />
-      <Field
-        label="Password"
-        name="password"
-        type="password"
-        autoComplete="current-password"
-        required
-      />
-      {error ? (
-        <p role="alert" className="type-caption border-l border-ink pl-3 text-ink">
-          {error}
-        </p>
-      ) : null}
-      <Button type="submit" disabled={pending} className="w-full">
-        {pending ? "Signing in…" : "Sign in"}
-      </Button>
-      <p className="type-caption text-muted">
+    <form
+      onSubmit={onSubmit}
+      onBlur={form.onBlur}
+      onChange={form.onChange}
+      noValidate
+      aria-busy={pending}
+      className="mt-8"
+    >
+      <fieldset disabled={pending} className="grid gap-6">
+        <legend className="sr-only">Sign in</legend>
+        <Field
+          label="Email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          autoCapitalize="none"
+          spellCheck={false}
+          inputMode="email"
+          required
+          error={errors.email}
+        />
+        <Field
+          label="Password"
+          name="password"
+          type="password"
+          autoComplete="current-password"
+          required
+          error={errors.password}
+        />
+        <FormError message={formError} />
+        <Button type="submit" className="w-full">
+          {pending ? "Signing in…" : "Sign in"}
+        </Button>
+      </fieldset>
+      <p className="type-caption mt-6 text-muted">
         New to Altelier?{" "}
         <TextLink href={`/sign-up?next=${encodeURIComponent(next)}`}>Create an account</TextLink>
       </p>
